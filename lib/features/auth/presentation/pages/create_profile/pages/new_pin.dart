@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:learingn_app/core/routes/route_names.dart';
+import 'package:learingn_app/features/auth/presentation/bloc/confirm_email/confirm_email_bloc.dart';
+import 'package:learingn_app/features/auth/presentation/bloc/confirm_email/confirm_email_state.dart';
 import 'package:learingn_app/features/splash_page/presentation/widgets/long_button.dart';
 
 import '../widgets/pin_box.dart';
@@ -36,12 +39,18 @@ class _CreateNewPinPageState extends State<CreateNewPinPage> {
             const SizedBox(height: 80),
             BuildPinBoxWidget(),
             const SizedBox(height: 80),
-            LongButtonWg(
-              onPressed: () {
-                Navigator.pushNamed(context, RouteNames.fingerPrint);
+            BlocConsumer<ConfirmEmailBloc, ConfirmEmailState>(
+              listener: (context, state) {},
+              builder: (context, state) {
+                if (state is ConfirmEmailLoading) {
+                  return CircularProgressIndicator();
+                }
+                return   LongButtonWg(title: "Continue", onPressed: () {
+                  Navigator.pushNamed(context, RouteNames.fingerPrint);
+                });
               },
-              title: 'Continue',
             ),
+
           ],
         ),
       ),

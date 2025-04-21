@@ -6,7 +6,6 @@ import 'package:learingn_app/features/auth/presentation/bloc/register/sign_up_in
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository authRepository;
 
-
   AuthBloc({required this.authRepository}) : super(AuthInitialState()) {
     on<RegisterWithEmailEvent>(registerWithEmail);
     on<LoginWithEmailEvent>(logIn);

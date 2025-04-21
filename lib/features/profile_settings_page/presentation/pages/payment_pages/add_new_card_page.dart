@@ -7,8 +7,6 @@ import 'package:learingn_app/core/constants/strings/app_strings.dart'
 import 'package:learingn_app/core/routes/route_names.dart';
 import 'package:learingn_app/core/utils/responsiveness/app_responsive.dart';
 import 'package:learingn_app/features/profile_settings_page/presentation/pages/payment_pages/widgets/add_card_info.dart';
-
-import '../../../../../core/constants/colors/app_colors.dart';
 import '../../../../splash_page/presentation/widgets/long_button.dart';
 
 class AddNewCardPage extends StatefulWidget {

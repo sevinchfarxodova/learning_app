@@ -4,8 +4,6 @@ import 'package:iconly/iconly.dart';
 
 import '../widgets/courses_container.dart';
 import '../widgets/courses_scroll.dart';
-import '../widgets/top_mentors_widget.dart';
-
 class Bookmark extends StatelessWidget {
   const Bookmark({super.key});
 

@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iconly/iconly.dart';
 import 'package:learingn_app/core/utils/responsiveness/app_responsive.dart';
 import 'package:learingn_app/features/profile_settings_page/presentation/widgets/language_widget.dart';
-import 'package:learingn_app/features/profile_settings_page/presentation/widgets/logout_widget.dart';
 import '../../../../core/constants/app_bar/default_app_bar_wg.dart';
 import '../../../../core/constants/colors/app_colors.dart';
 import '../../../../core/constants/strings/app_strings.dart';

@@ -9,7 +9,6 @@ import 'package:learingn_app/features/auth/presentation/bloc/register/sign_up_in
 import 'package:learingn_app/features/splash_page/presentation/widgets/long_button.dart';
 import '../../../../core/constants/colors/app_colors.dart';
 import '../../../../core/sizes/sizes.dart';
-import '../bloc/register/sign_up_in_event.dart';
 import '../widgets/remember_me.dart';
 import '../widgets/text_field.dart';
 
@@ -27,7 +26,6 @@ class _SignUpBlankFormState extends State<SignUpBlankForm> {
   final FocusNode _emailFocusNode = FocusNode();
   bool _rememberMe = false;
   bool _obscureText = true;
-  bool _useEmail = false;
 
   @override
   void initState() {
@@ -45,38 +43,6 @@ class _SignUpBlankFormState extends State<SignUpBlankForm> {
     super.dispose();
   }
 
-  String? _validateForm() {
-    if (_emailController.text.trim().isEmpty) {
-      return _useEmail ? 'Email is required' : 'Phone number is required';
-    }
-    if (_useEmail && !_emailController.text.contains('@')) {
-      return 'Invalid email format';
-    }
-    if (!_useEmail && _emailController.text.length < 10) {
-      return 'Invalid phone number';
-    }
-    if (_passwordController.text.length < 6) {
-      return 'Password must be at least 6 characters';
-    }
-    return null;
-  }
-
-  void _submitSignup(BuildContext context) {
-    final errorMessage = _validateForm();
-
-    if (errorMessage == null) {
-      context.read<AuthBloc>().add(
-        RegisterWithEmailEvent(
-          email: _emailController.text.trim(),
-          password: _passwordController.text.trim(),
-        ),
-      );
-    } else {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(errorMessage)));
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -176,7 +142,7 @@ class _SignUpBlankFormState extends State<SignUpBlankForm> {
                     return LongButtonWg(
                       title: AppStrings.signUp,
                       onPressed: () {
-                        Navigator.pushNamed(context, RouteNames.createProfile);
+                        Navigator.pushNamed(context, RouteNames.newPin);
                       },
                     );
                   },

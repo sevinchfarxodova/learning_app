@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:iconly/iconly.dart';
-
-import '../../../../core/constants/colors/app_colors.dart';
 
 class LogOutWidget extends StatelessWidget {
   final IconData icon;

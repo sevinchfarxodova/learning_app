@@ -1,6 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:learingn_app/features/auth/domain/usecase/confirm_email_use_case.dart';
 import 'package:learingn_app/features/auth/domain/usecase/login_usecase.dart';
+import 'package:learingn_app/features/auth/presentation/bloc/confirm_email/confirm_email_bloc.dart';
 import 'package:learingn_app/features/auth/presentation/bloc/register/sign_up_in_bloc.dart';
 
 import '../../features/auth/data/data_sources/remote/aut_remote_data_source.dart';
@@ -40,5 +41,9 @@ Future<void> setupServiceLocator() async {
 
   sl.registerFactory<AuthBloc>(
           () => AuthBloc(authRepository: sl<AuthRepository>(), ));
+
+
+  sl.registerFactory<ConfirmEmailBloc>(
+          () => ConfirmEmailBloc(authRepository: sl<AuthRepository>(), ));
 
 }

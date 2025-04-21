@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iconly/iconly.dart';
 import 'package:learingn_app/core/routes/route_names.dart';
 import 'package:learingn_app/features/splash_page/presentation/widgets/long_button.dart';
 import '../../../../core/constants/colors/app_colors.dart';
+import '../bloc/register/sign_up_in_bloc.dart';
+import '../bloc/register/sign_up_in_state.dart';
 import '../widgets/remember_me.dart';
 import '../widgets/text_field.dart';
 
@@ -100,9 +103,19 @@ class _SignInState extends State<SignIn> {
                     });
                   },
                 ),
-                LongButtonWg(title: "Sign in", onPressed: () {
-                  Navigator.pushNamed(context, RouteNames.createProfile);
-                }),
+
+                BlocConsumer<AuthBloc, AuthState>(
+                  listener: (context, state) {},
+                  builder: (context, state) {
+                    if (state is AuthLoadingState) {
+                      return CircularProgressIndicator();
+                    }
+                    return   LongButtonWg(title: "Sign in", onPressed: () {
+                      Navigator.pushNamed(context, RouteNames.createProfile);
+                    });
+                  },
+                ),
+
                 SizedBox(height: 12,),
                 Center(
                   child: TextButton(
