@@ -59,7 +59,10 @@ class AppRoute {
         return MaterialPageRoute(builder: (_) => CreateProfile());
 
       case RouteNames.newPin:
-        return MaterialPageRoute(builder: (_) => CreateNewPinPage());
+        final userId = routeSettings.arguments as String;
+        return MaterialPageRoute(
+          builder: (_) => CreateNewPinPage(userId: userId),
+        );
 
 
       case RouteNames.fingerPrint:

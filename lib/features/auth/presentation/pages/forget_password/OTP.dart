@@ -12,6 +12,7 @@ class OTP extends StatefulWidget {
 }
 
 class _OTPState extends State<OTP> {
+  TextEditingController passwordController =TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,7 +36,7 @@ class _OTPState extends State<OTP> {
               ),
             ),
             const SizedBox(height: 80),
-            BuildPinBoxWidget(),
+            BuildPinBoxWidget(controller: passwordController,),
              SizedBox(height: 33.h),
             Text("Resend code in 55 s"),
              SizedBox(height: 80),

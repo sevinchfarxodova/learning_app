@@ -45,6 +45,8 @@ dependencies:
   image_picker:
   pretty_dio_logger: ^1.4.0
   equatable:
+  hive:
+  hive_flutter:
 
 
 dev_dependencies:

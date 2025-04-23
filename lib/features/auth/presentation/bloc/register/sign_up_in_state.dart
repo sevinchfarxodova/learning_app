@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:learingn_app/features/auth/domain/entity/register_entity.dart';
 
 abstract class AuthState extends Equatable {
   @override
@@ -10,12 +11,12 @@ class AuthInitialState extends AuthState {}
 class AuthLoadingState extends AuthState {}
 
 class AuthSuccessState extends AuthState {
-  final Map<String, dynamic> data;
+  final RegisterEntity registerEntity;
 
-  AuthSuccessState({required this.data});
+  AuthSuccessState({required this.registerEntity});
 
   @override
-  List<Object?> get props => [data];
+  List<Object?> get props => [registerEntity];
 }
 
 class AuthErrorState extends AuthState {

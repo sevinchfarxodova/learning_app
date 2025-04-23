@@ -19,31 +19,32 @@ Future<void> setupServiceLocator() async {
 
   // Data Sources
   sl.registerLazySingleton<AuthRemoteDataSource>(
-          () => AuthRemoteDataSourceImpl(dioClient: sl<DioClient>()));
+    () => AuthRemoteDataSourceImpl(dioClient: sl<DioClient>()),
+  );
 
   // Repositories
   sl.registerLazySingleton<AuthRepository>(
-          () => AuthRepositoryImpl(remoteDataSource: sl<AuthRemoteDataSource>()));
+    () => AuthRepositoryImpl(remoteDataSource: sl<AuthRemoteDataSource>()),
+  );
 
   // use Case
   sl.registerLazySingleton<RegisterWithEmailUseCase>(
-        () => RegisterWithEmailUseCase(sl<AuthRepository>()),
+    () => RegisterWithEmailUseCase(sl<AuthRepository>()),
   );
 
   sl.registerLazySingleton<LoginUsecase>(
-        () => LoginUsecase(sl<AuthRepository>()),
+    () => LoginUsecase(sl<AuthRepository>()),
   );
 
   sl.registerLazySingleton<ConfirmEmailUseCase>(
-        () => ConfirmEmailUseCase(sl<AuthRepository>()),
+    () => ConfirmEmailUseCase(sl<AuthRepository>()),
   );
 
-
   sl.registerFactory<AuthBloc>(
-          () => AuthBloc(authRepository: sl<AuthRepository>(), ));
-
+    () => AuthBloc(authRepository: sl<AuthRepository>()),
+  );
 
   sl.registerFactory<ConfirmEmailBloc>(
-          () => ConfirmEmailBloc(authRepository: sl<AuthRepository>(), ));
-
+    () => ConfirmEmailBloc(authRepository: sl<AuthRepository>()),
+  );
 }

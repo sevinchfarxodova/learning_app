@@ -18,10 +18,5 @@ class TokenModel extends TokenEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'accessToken': accessToken,
-      'refreshToken': refreshToken,
-    };
-  }
+
 }

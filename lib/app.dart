@@ -18,6 +18,7 @@ class MyApp extends StatelessWidget {
      return  MultiBlocProvider(
        providers: [
          BlocProvider<AuthBloc>(create: (context) => sl<AuthBloc>()),
+
          BlocProvider<ConfirmEmailBloc>(create: (context) => sl<ConfirmEmailBloc>()),
        ],
        child: ScreenUtilInit(

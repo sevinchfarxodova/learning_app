@@ -2,11 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
 
 class BuildPinBoxWidget extends StatelessWidget {
-  const BuildPinBoxWidget({super.key});
+  final TextEditingController controller;
+
+  const BuildPinBoxWidget({
+    super.key,
+    required this.controller,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return  Pinput(
+    return Pinput(
+      controller: controller,
       length: 4,
       obscureText: true,
       obscuringWidget: const Icon(Icons.circle, size: 12, color: Colors.black),

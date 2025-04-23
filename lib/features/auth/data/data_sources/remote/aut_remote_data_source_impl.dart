@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:learingn_app/core/constants/api_urls.dart';
 import 'package:learingn_app/core/network/dio_client.dart';
+import 'package:learingn_app/features/auth/data/model/register_model.dart';
+import 'package:learingn_app/features/auth/domain/entity/register_entity.dart';
 
 import '../../../domain/entity/token_entity.dart';
 import '../../model/token_model.dart';
@@ -12,21 +14,18 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   AuthRemoteDataSourceImpl({required this.dioClient});
 
   @override
-  Future<Map<String, dynamic>> registerWithEmail({
+  Future<RegisterModel> registerWithEmail({
     required String email,
     required String password,
   }) async {
     try {
       final response = await dioClient.post(
         ApiUrls.register,
-        data: {
-          'email': email,
-          'password': password,
-        },
+        data: {'email': email, 'password': password},
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        return response.data as Map<String, dynamic>;
+        return RegisterModel.fromJson(response.data);
       } else {
         throw Exception(_parseError(response));
       }
@@ -35,19 +34,15 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     }
   }
 
-
   @override
-  Future<TokenEntity> confirmEmail({
+  Future<TokenModel> confirmEmail({
     required String userId,
     required String code,
   }) async {
     try {
       final response = await dioClient.post(
         ApiUrls.confirmEmail,
-        data: {
-          'userId': userId,
-          'code': code,
-        },
+        data: {'userId': userId, 'code': code},
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -61,17 +56,14 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-  Future login({
+  Future<Map<String, dynamic>> login({
     required String email,
     required String password,
   }) async {
     try {
       final response = await dioClient.post(
         ApiUrls.login,
-        data: {
-          'email': email,
-          'password': password,
-        },
+        data: {'email': email, 'password': password},
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -83,7 +75,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       throw Exception(_parseDioError(e));
     }
   }
-
 
   String _parseError(Response response) {
     try {
