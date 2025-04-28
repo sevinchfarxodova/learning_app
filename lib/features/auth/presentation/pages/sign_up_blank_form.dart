@@ -5,7 +5,7 @@ import 'package:iconly/iconly.dart';
 import 'package:learingn_app/core/constants/strings/app_strings.dart';
 import 'package:learingn_app/core/routes/route_names.dart';
 import 'package:learingn_app/features/auth/presentation/bloc/register/sign_up_in_bloc.dart';
-import 'package:learingn_app/features/auth/presentation/bloc/register/sign_up_in_event.dart';
+import 'package:learingn_app/features/auth/presentation/bloc/sign_up_in_event.dart';
 import 'package:learingn_app/features/auth/presentation/bloc/register/sign_up_in_state.dart';
 import 'package:learingn_app/features/splash_page/presentation/widgets/long_button.dart';
 import '../../../../core/constants/colors/app_colors.dart';
@@ -216,14 +216,6 @@ class _SignUpBlankFormState extends State<SignUpBlankForm> {
                   builder: (context, state) {
                     if (state is AuthLoadingState) {
                       return Center(child: CircularProgressIndicator());
-                    }else if (state is AuthSuccessState) {
-                      return const Center(
-                        child: Text(
-                          'Sign-up successful! Redirecting...',
-                          style: TextStyle(color: Colors.green, fontSize: 16),
-                        ),
-
-                      );
                     } else {
                       return LongButtonWg(
                         title: AppStrings.signUp,

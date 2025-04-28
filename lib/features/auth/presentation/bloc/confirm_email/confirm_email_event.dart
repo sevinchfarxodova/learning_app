@@ -8,10 +8,12 @@ abstract class ConfirmEmailEvent extends Equatable {
 class SendConfirmCodeEvent extends ConfirmEmailEvent {
   final String userId;
   final String code;
+  final bool isResetPassword;
 
   SendConfirmCodeEvent({
     required this.userId,
     required this.code,
+    required this.isResetPassword
   });
 
   @override

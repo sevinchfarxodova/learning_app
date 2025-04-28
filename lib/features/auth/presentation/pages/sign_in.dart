@@ -6,12 +6,13 @@ import 'package:learingn_app/core/routes/route_names.dart';
 import 'package:learingn_app/features/splash_page/presentation/widgets/long_button.dart';
 import '../../../../core/constants/colors/app_colors.dart';
 import '../bloc/register/sign_up_in_bloc.dart';
+import '../bloc/sign_up_in_event.dart';
 import '../bloc/register/sign_up_in_state.dart';
 import '../widgets/remember_me.dart';
 import '../widgets/text_field.dart';
 
 class SignIn extends StatefulWidget {
-   const SignIn({super.key});
+  const SignIn({super.key});
 
   @override
   State<SignIn> createState() => _SignInState();
@@ -27,8 +28,6 @@ class _SignInState extends State<SignIn> {
   bool _obscureText = true;
   bool eye = true;
 
-
-
   @override
   void dispose() {
     _passwordFocusNode.dispose();
@@ -36,6 +35,15 @@ class _SignInState extends State<SignIn> {
     _emailFocusNode.dispose();
     _emailController.dispose();
     super.dispose();
+  }
+
+  void signIn() {
+    context.read<AuthBloc>().add(
+      LoginWithEmailEvent(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      ),
+    );
   }
 
   @override
@@ -68,32 +76,31 @@ class _SignInState extends State<SignIn> {
                 TextFiledWidget1(
                   text: 'Email',
                   textEditingController: _emailController,
-                  prefixIcon:  IconButton(
-                    icon: Icon(
-                      IconlyLight.message,
-                      color: Colors.grey,
-                    ), onPressed: () {  },
-                  ), obsecure: false,
+                  prefixIcon: IconButton(
+                    icon: Icon(IconlyLight.message, color: Colors.grey),
+                    onPressed: () {},
+                  ),
+                  obsecure: false,
                 ),
+                SizedBox(height: 14.h,),
                 TextFiledWidget1(
-                    obsecure: _obscureText,
-                    text: 'Password',
-                    textEditingController: _passwordController,
-                    prefixIcon:  IconButton(
-                      icon: Icon(
-                        IconlyLight.lock,
-                        color: Colors.grey,
-                      ), onPressed: () {  },
-                    ),
-                    suffixIcon: IconButton(
-                      onPressed: () {
-                        setState(() {
-                          _obscureText = !_obscureText;
-                        });
-                      }, icon: Icon(
+                  obsecure: _obscureText,
+                  text: 'Password',
+                  textEditingController: _passwordController,
+                  prefixIcon: IconButton(
+                    icon: Icon(IconlyLight.lock, color: Colors.grey),
+                    onPressed: () {},
+                  ),
+                  suffixIcon: IconButton(
+                    onPressed: () {
+                      setState(() {
+                        _obscureText = !_obscureText;
+                      });
+                    },
+                    icon: Icon(
                       _obscureText ? IconlyLight.hide : IconlyLight.show,
                     ),
-                    )
+                  ),
                 ),
                 AuthCheckboxWg(
                   rememberMe: _rememberMe,
@@ -105,30 +112,49 @@ class _SignInState extends State<SignIn> {
                 ),
 
                 BlocConsumer<AuthBloc, AuthState>(
-                  listener: (context, state) {},
+                  listener: (context, state) {
+                    if (state is AuthSuccessState) {
+                      Navigator.pushNamed(context, RouteNames.homePage);
+                    } else if (state is AuthErrorState) {
+                      print('Error state: ${state.error}');
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(state.error),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
+                  },
                   builder: (context, state) {
                     if (state is AuthLoadingState) {
                       return CircularProgressIndicator();
                     }
-                    return   LongButtonWg(title: "Sign in", onPressed: () {
-                      Navigator.pushNamed(context, RouteNames.createProfile);
-                    });
+                    return LongButtonWg(
+                      title: "Sign in",
+                      onPressed: () {
+                        signIn();
+                      },
+                    );
                   },
                 ),
 
-                SizedBox(height: 12,),
+                SizedBox(height: 12),
                 Center(
                   child: TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushNamed(context, RouteNames.forgotPassword);
+
+
+                    },
                     child: Text(
                       "Forgot the password?",
                       style: TextStyle(color: AppColors.blue),
                     ),
                   ),
                 ),
-                SizedBox(height: 35.h,),
+                SizedBox(height: 35.h),
                 Row(
-                  children:  [
+                  children: [
                     Expanded(child: Divider()),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 8),
@@ -137,7 +163,7 @@ class _SignInState extends State<SignIn> {
                     Expanded(child: Divider()),
                   ],
                 ),
-                SizedBox(height: 24,),
+                SizedBox(height: 24),
 
                 Padding(
                   padding: EdgeInsets.only(left: 40, right: 40),
@@ -145,9 +171,9 @@ class _SignInState extends State<SignIn> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       _buildSignUpCard(imgUrl: 'assets/images/facebook.png'),
-                      SizedBox(width: 20.w,),
+                      SizedBox(width: 20.w),
                       _buildSignUpCard(imgUrl: 'assets/images/google.png'),
-                      SizedBox(width: 20.w,),
+                      SizedBox(width: 20.w),
                       _buildSignUpCard(imgUrl: 'assets/images/apple.png'),
                     ],
                   ),
@@ -161,7 +187,10 @@ class _SignInState extends State<SignIn> {
                     ),
                     TextButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, RouteNames.signUpBlankForm);
+                        Navigator.pushNamed(
+                          context,
+                          RouteNames.signUpBlankForm,
+                        );
                       },
                       child: Text(
                         'Sign up',
@@ -180,7 +209,8 @@ class _SignInState extends State<SignIn> {
       ),
     );
   }
-  Widget _buildSignUpCard( {required String imgUrl} ) {
+
+  Widget _buildSignUpCard({required String imgUrl}) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 8.h),
       padding: EdgeInsets.symmetric(horizontal: 28.w, vertical: 16.h),
@@ -188,15 +218,7 @@ class _SignInState extends State<SignIn> {
         border: Border.all(color: Colors.black.withOpacity(0.1)),
         borderRadius: BorderRadius.circular(16),
       ),
-      child: Row(
-        children: [
-          Image.asset(
-            imgUrl,
-            width: 24,
-            height: 24,
-          ),
-        ],
-      ),
+      child: Row(children: [Image.asset(imgUrl, width: 24, height: 24)]),
     );
   }
 }

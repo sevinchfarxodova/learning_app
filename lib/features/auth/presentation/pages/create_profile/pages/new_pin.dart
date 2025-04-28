@@ -21,7 +21,7 @@ class _CreateNewPinPageState extends State<CreateNewPinPage> {
 
   void _confirmCode() {
     context.read<ConfirmEmailBloc>().add(
-      SendConfirmCodeEvent(userId: widget.userId, code: codeController.text),
+      SendConfirmCodeEvent(userId: widget.userId, code: codeController.text, isResetPassword: false),
     );
   }
 

@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iconly/iconly.dart';
-
+import 'package:learingn_app/features/auth/presentation/bloc/reset_new_password/new_passw_bloc.dart';
+import 'package:learingn_app/features/auth/presentation/bloc/sign_up_in_event.dart';
+import '../../../../../core/constants/colors/app_colors.dart';
+import '../../../../../core/routes/route_names.dart';
 import '../../../../splash_page/presentation/widgets/long_button.dart';
+import '../../bloc/reset_new_password/new_passw_state.dart';
 import '../../widgets/remember_me.dart';
 import '../../widgets/text_field.dart';
 import '../create_profile/widgets/alert_dialog.dart';
 
 class NewPassword extends StatefulWidget {
-  const NewPassword({super.key});
+final String token;
+  const NewPassword({super.key, required this.token,});
 
   @override
   State<NewPassword> createState() => _NewPasswordState();
@@ -16,9 +22,29 @@ class NewPassword extends StatefulWidget {
 
 class _NewPasswordState extends State<NewPassword> {
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _repeatPassword = TextEditingController();
   bool _rememberMe = false;
   bool _obscureText = true;
-  bool eye = true;
+  bool _obscureText2 = true;
+
+
+  void createNewPass() {
+    String password = _passwordController.text.trim();
+    String repeatPassword = _repeatPassword.text.trim();
+
+    if(password.isEmpty || repeatPassword.isEmpty){
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Please, fill in all fields!!!"),
+          backgroundColor: AppColors.red,
+        ),
+      );
+      return;
+    }
+    context.read<NewPasswordBloc>().add(
+        ResetNewPasswordEvent(newPassword: password, token: widget.token));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,45 +72,43 @@ class _NewPasswordState extends State<NewPassword> {
               ),
               SizedBox(height: 22.h),
               TextFiledWidget1(
-                  obsecure: _obscureText,
-                  text: 'Password',
-                  textEditingController: _passwordController,
-                  prefixIcon: IconButton(
-                    icon: Icon(
-                      IconlyLight.lock,
-                      color: Colors.grey,
-                    ), onPressed: () {  },
-                  ),
-                  suffixIcon: IconButton(
-                    onPressed: () {
-                      setState(() {
-                        _obscureText = !_obscureText;
-                      });
-                    }, icon: Icon(
+                obsecure: _obscureText,
+                text: 'Password',
+                textEditingController: _passwordController,
+                prefixIcon: IconButton(
+                  icon: Icon(IconlyLight.lock, color: Colors.grey),
+                  onPressed: () {},
+                ),
+                suffixIcon: IconButton(
+                  onPressed: () {
+                    setState(() {
+                      _obscureText = !_obscureText;
+                    });
+                  },
+                  icon: Icon(
                     _obscureText ? IconlyLight.hide : IconlyLight.show,
                   ),
-                  )
+                ),
               ),
               SizedBox(height: 12.h),
               TextFiledWidget1(
-                  obsecure: _obscureText,
-                  text: 'Password',
-                  textEditingController: _passwordController,
-                  prefixIcon:   IconButton(
-                    icon: Icon(
-                      IconlyLight.lock,
-                      color: Colors.grey,
-                    ), onPressed: () {  },
+                obsecure: _obscureText,
+                text: 'Password',
+                textEditingController: _repeatPassword,
+                prefixIcon: IconButton(
+                  icon: Icon(IconlyLight.lock, color: Colors.grey),
+                  onPressed: () {},
+                ),
+                suffixIcon: IconButton(
+                  onPressed: () {
+                    setState(() {
+                      _obscureText2 = !_obscureText2;
+                    });
+                  },
+                  icon: Icon(
+                    _obscureText2 ? IconlyLight.hide : IconlyLight.show,
                   ),
-                  suffixIcon: IconButton(
-                    onPressed: () {
-                      setState(() {
-                        _obscureText = !_obscureText;
-                      });
-                    }, icon: Icon(
-                    _obscureText ? IconlyLight.hide : IconlyLight.show,
-                  ),
-                  )
+                ),
               ),
               SizedBox(height: 15.h),
               AuthCheckboxWg(
@@ -96,23 +120,43 @@ class _NewPasswordState extends State<NewPassword> {
                 },
               ),
               SizedBox(height: 50.h),
-              LongButtonWg(title: "Continue", onPressed: () {
-                showDialog(
-                  context: context,
-                  barrierDismissible: false,
-                  builder: (context) {
-                    Future.delayed(const Duration(seconds: 1), () {
-                      Navigator.of(context).pop();
-                    });
-                    return CustomAlertDialog(
-                      imagePath: 'assets/images/alert2.png',
-                      title: 'Congratulations!',
-                      subtitle:
-                      'Your account is ready to use. You will be redirected to the Home page in a few seconds..',
-                    );
-                  },
-                );
-              }),
+
+              BlocConsumer<NewPasswordBloc, ResetNewPasswordState>(
+                listener: (context, state) {
+                  if (state is ResetNewPasswordSuccess) {
+                    Navigator.pushNamed(context, RouteNames.homePage);
+                  } else if (state is ResetNewPasswordError) {
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(SnackBar(content: Text(state.message)));
+                  }
+                },
+                builder: (context, state) {
+                  if (state is ResetNewPasswordLoading) {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                  return   LongButtonWg(
+                    title: "Continue",
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (context) {
+                          Future.delayed(const Duration(seconds: 1), () {
+                            Navigator.pushNamed(context, RouteNames.homePage);
+                          });
+                          return CustomAlertDialog(
+                            imagePath: 'assets/images/alert2.png',
+                            title: 'Congratulations!',
+                            subtitle:
+                            'Your account is ready to use. You will be redirected to the Home page in a few seconds..',
+                          );
+                        },
+                      );
+                    },
+                  );
+                },
+              ),
             ],
           ),
         ),

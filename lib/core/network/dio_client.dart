@@ -17,7 +17,7 @@ class DioClient {
         responseType: ResponseType.json,
         headers: {
           HttpHeaders.contentTypeHeader: ContentType.json.mimeType,
-          // HttpHeaders.authorizationHeader: 'Bearer ${AppConstants.apiToken}', // token
+         // HttpHeaders.authorizationHeader: 'Bearer ${AppConstants.apiToken}', // token
         },
       ),
     );
@@ -28,6 +28,10 @@ class DioClient {
         logPrint: (object) => log(object.toString(), name: 'TMDB API'),
       ),
     );
+  }
+
+  void setToken(String token){
+    _dio.options.headers["Authorization"]="Bearer $token";
   }
 
   // GET

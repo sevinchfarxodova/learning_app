@@ -1,7 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:learingn_app/features/auth/domain/entity/register_entity.dart';
 import 'package:learingn_app/features/auth/domain/repository/auth_repo.dart';
-import 'package:learingn_app/features/auth/presentation/bloc/register/sign_up_in_event.dart';
+import 'package:learingn_app/features/auth/presentation/bloc/sign_up_in_event.dart';
 import 'package:learingn_app/features/auth/presentation/bloc/register/sign_up_in_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
@@ -41,7 +40,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         email: event.email,
         password: event.password,
       );
-    //  emit(AuthSuccessState(data: response, userEntity: response));
+      emit(AuthSuccessState(registerEntity: response,));
     } catch (e) {
       emit(AuthErrorState(error: e.toString()));
     }

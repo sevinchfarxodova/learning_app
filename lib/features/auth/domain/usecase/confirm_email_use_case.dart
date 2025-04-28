@@ -7,11 +7,11 @@ class ConfirmEmailUseCase {
 
   ConfirmEmailUseCase(this.authRepository);
 
-  Future<TokenEntity> call({required String userId, required String code}) async {
+  Future<TokenEntity> call({required String userId, required String code, required bool isResendPassword}) async {
     if (userId.isEmpty ||
         code.isEmpty) {
       throw Exception('All fields must be non-empty');
     }
-    return await authRepository.confirmEmail(userId: userId, code: code);
+    return await authRepository.confirmEmail(userId: userId, code: code, isResetPassword: isResendPassword);
   }
 }

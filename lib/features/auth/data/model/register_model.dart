@@ -1,12 +1,10 @@
 import 'package:learingn_app/features/auth/domain/entity/register_entity.dart';
 
 class RegisterModel extends RegisterEntity {
-  RegisterModel({required super.userId, required super.authType});
+  RegisterModel({required super.userId});
 
-  factory RegisterModel.fromJson(Map<String, dynamic> json) => RegisterModel(
-    userId: json["user_id"] ?? 0,
-    authType: json["auth_type"] ?? "",
-  );
+  factory RegisterModel.fromJson(Map<String, dynamic> json) =>
+      RegisterModel(userId: json["user_id"] ?? 0);
 
-  Map<String, dynamic> toJson() => {"user_id": userId, "auth_type": authType};
+  Map<String, dynamic> toJson() => {"user_id": userId};
 }

@@ -30,8 +30,6 @@ import '../../features/auth/presentation/pages/create_profile/pages/new_pin.dart
 import '../../features/auth/presentation/pages/create_profile/pages/profile.dart';
 import '../../features/auth/presentation/pages/create_profile/pages/set_fingerprint.dart';
 
-
-
 class AppRoute {
   BuildContext context;
 
@@ -39,6 +37,7 @@ class AppRoute {
 
   Route onGenerateRoute(RouteSettings routeSettings) {
     switch (routeSettings.name) {
+      // auth
       case RouteNames.screen2:
         return MaterialPageRoute(builder: (_) => Screen2());
 
@@ -54,16 +53,14 @@ class AppRoute {
       case RouteNames.signIn:
         return MaterialPageRoute(builder: (_) => SignIn());
 
-
-    case RouteNames.createProfile:
+      case RouteNames.createProfile:
         return MaterialPageRoute(builder: (_) => CreateProfile());
 
       case RouteNames.newPin:
-        final userId = routeSettings.arguments as String;
+        final userId = routeSettings.arguments.toString();
         return MaterialPageRoute(
           builder: (_) => CreateNewPinPage(userId: userId),
         );
-
 
       case RouteNames.fingerPrint:
         return MaterialPageRoute(builder: (_) => FingerPrintPage());
@@ -72,18 +69,22 @@ class AppRoute {
         return MaterialPageRoute(builder: (_) => ForgotPassword());
 
       case RouteNames.otp:
-        return MaterialPageRoute(builder: (_) => OTP());
+        final userId = routeSettings.arguments;
+        final emailOrPhone = routeSettings.arguments;
+        return MaterialPageRoute(
+          builder: (_) => OTP(userId: userId.toString(), emailOrPhone: emailOrPhone.toString()),
+        );
 
       case RouteNames.newPassword:
-        return MaterialPageRoute(builder: (_) => NewPassword());
+        final token = routeSettings.arguments;
+        return MaterialPageRoute(builder: (_) => NewPassword(token: token.toString(),));
 
-
+      //home
       case RouteNames.homePage:
         return MaterialPageRoute(builder: (_) => HomePage());
 
       case RouteNames.bottomNavBar:
         return MaterialPageRoute(builder: (_) => BottomNavBar());
-
 
       case RouteNames.notificationPage:
         return MaterialPageRoute(builder: (_) => NotificationPage());
@@ -97,8 +98,7 @@ class AppRoute {
       case RouteNames.popularCoursesPage:
         return MaterialPageRoute(builder: (_) => PopularCoursesPage());
 
-
-        // profile settings
+      // profile settings
 
       case RouteNames.profile:
         return MaterialPageRoute(builder: (_) => ProfileSettings());
@@ -111,7 +111,6 @@ class AppRoute {
 
       case RouteNames.addNewCard:
         return MaterialPageRoute(builder: (_) => AddNewCardPage());
-
 
       case RouteNames.editProfile:
         return MaterialPageRoute(builder: (_) => EditProfilePage());
@@ -128,10 +127,8 @@ class AppRoute {
       case RouteNames.inviteFriends:
         return MaterialPageRoute(builder: (_) => InviteFriends());
 
-
       case RouteNames.helpCenter:
         return MaterialPageRoute(builder: (_) => HelpCenterPage());
-
 
       case RouteNames.transactions:
         return MaterialPageRoute(builder: (_) => TransactionPage());

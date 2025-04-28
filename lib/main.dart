@@ -8,7 +8,7 @@ import 'core/di/service_locator.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
-  await Hive..openBox("authBox");
+  await Hive.openBox("authBox");
   await setupServiceLocator();
   runApp(const MyApp());
 }
