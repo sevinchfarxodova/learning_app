@@ -95,7 +95,6 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
               ),
-
               // Mentors
               BlocBuilder<TopMentorsBloc, TopMentorsState>(
                 builder: (context, state) {
