@@ -9,6 +9,16 @@ import 'package:learingn_app/features/auth/presentation/bloc/confirm_email/confi
 import 'package:learingn_app/features/auth/presentation/bloc/register/sign_up_in_bloc.dart';
 import 'package:learingn_app/features/auth/presentation/bloc/reset_new_password/new_passw_bloc.dart';
 import 'package:learingn_app/features/auth/presentation/bloc/reset_password/reset_pass_bloc.dart';
+import 'package:learingn_app/features/homepage/data/datasource/home_remote_datasource.dart';
+import 'package:learingn_app/features/homepage/data/datasource/home_remote_datasource_impl.dart';
+import 'package:learingn_app/features/homepage/data/repository/home_repo.dart';
+import 'package:learingn_app/features/homepage/domain/repository/home_repository.dart';
+import 'package:learingn_app/features/homepage/domain/usecases/courses_usecase.dart';
+import 'package:learingn_app/features/homepage/domain/usecases/mentors_usecase.dart';
+import 'package:learingn_app/features/homepage/domain/usecases/top_mentors_usecase.dart';
+import 'package:learingn_app/features/homepage/presentation/bloc/courses/course_bloc.dart';
+import 'package:learingn_app/features/homepage/presentation/bloc/mentors/mentors_bloc.dart';
+import 'package:learingn_app/features/homepage/presentation/bloc/top_mentors/top_mentors_bloc.dart';
 
 import '../../features/auth/data/data_sources/remote/aut_remote_data_source.dart';
 import '../../features/auth/data/data_sources/remote/aut_remote_data_source_impl.dart';
@@ -23,7 +33,8 @@ Future<void> setupServiceLocator() async {
   // Core
   sl.registerSingleton<DioClient>(DioClient());
 
-  // Data Sources
+                   // DATA SOURCES
+  // auth
   sl.registerLazySingleton<AuthRemoteDataSource>(
     () => AuthRemoteDataSourceImpl(dioClient: sl<DioClient>()),
   );
@@ -31,16 +42,26 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<AuthLocalDataSource>(
     () => AuthLocalDataSourceImpl(box: Hive.box('authBox')),
   );
+  // home
+  sl.registerLazySingleton<HomeRemoteDataSource>(
+    () => HomeRemoteDataSourceImpl(dioClient: sl<DioClient>()),
+  );
 
-  // Repositories
+                          // REPOSITORIES
+  //auth
   sl.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(
       remoteDataSource: sl<AuthRemoteDataSource>(),
       authLocalDataSource: sl<AuthLocalDataSource>(),
     ),
   );
+  // home
+  sl.registerLazySingleton<HomeRepository>(
+    () => HomeRepositoryImpl(homeRemoteDataSource: sl<HomeRemoteDataSource>()),
+  );
 
-  // use Case
+                        // USE CASES
+  // auth
   sl.registerLazySingleton<RegisterWithEmailUseCase>(
     () => RegisterWithEmailUseCase(sl<AuthRepository>()),
   );
@@ -58,21 +79,35 @@ Future<void> setupServiceLocator() async {
   );
 
   sl.registerLazySingleton<NewPasswordResetUseCase>(
-        () => NewPasswordResetUseCase(authRepository: sl<AuthRepository>()),
+    () => NewPasswordResetUseCase(authRepository: sl<AuthRepository>()),
   );
 
-  // bloc
+  // home
+  sl.registerLazySingleton<TopMentorsUseCase>(
+        () => TopMentorsUseCase( sl<HomeRepository>()),
+  );
+
+  sl.registerLazySingleton<MentorsUseCase>(
+        () => MentorsUseCase( sl<HomeRepository>()),
+  );
+
+  sl.registerLazySingleton<CoursesUseCase>(
+        () => CoursesUseCase( sl<HomeRepository>()),
+  );
+
+                            //BLOCS
+  //     auth
 
   sl.registerFactory<AuthBloc>(
     () => AuthBloc(authRepository: sl<AuthRepository>()),
   );
 
   sl.registerFactory<ResetPasswordBloc>(
-        () => ResetPasswordBloc(authRepository: sl<AuthRepository>()),
+    () => ResetPasswordBloc(authRepository: sl<AuthRepository>()),
   );
 
   sl.registerFactory<NewPasswordBloc>(
-        () => NewPasswordBloc( sl<AuthRepository>()),
+    () => NewPasswordBloc(sl<AuthRepository>()),
   );
 
   sl.registerFactory<ConfirmEmailBloc>(
@@ -81,4 +116,18 @@ Future<void> setupServiceLocator() async {
       authLocalDataSource: sl<AuthLocalDataSource>(),
     ),
   );
+
+  //  home
+  sl.registerLazySingleton<TopMentorsBloc>(
+        () => TopMentorsBloc( sl<HomeRepository>()),
+  );
+
+  sl.registerLazySingleton<MentorBloc>(
+        () => MentorBloc( sl<HomeRepository>()),
+  );
+
+  sl.registerLazySingleton<CoursesBloc>(
+        () => CoursesBloc( sl<HomeRepository>()),
+  );
+
 }

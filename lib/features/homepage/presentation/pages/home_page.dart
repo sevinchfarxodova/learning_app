@@ -1,8 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iconly/iconly.dart';
 import 'package:learingn_app/features/auth/presentation/widgets/text_field.dart';
+import 'package:learingn_app/features/homepage/presentation/bloc/courses/course_bloc.dart';
+import 'package:learingn_app/features/homepage/presentation/bloc/courses/course_state.dart';
+import 'package:learingn_app/features/homepage/presentation/bloc/home_event.dart';
+import 'package:learingn_app/features/homepage/presentation/bloc/top_mentors/top_mentors_bloc.dart';
+import 'package:learingn_app/features/homepage/presentation/bloc/top_mentors/top_mentors_state.dart';
 import 'package:learingn_app/features/homepage/presentation/widgets/courses_container.dart';
 import '../../../../core/constants/colors/app_colors.dart';
 import '../../../../core/routes/route_names.dart';
@@ -18,6 +24,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<TopMentorsBloc>().add(TopMentorsEvent(limit: 10));
+    context.read<CoursesBloc>().add(GetPopularCoursesEvent(limit: 2));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,9 +55,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 prefixIcon: IconButton(
                   icon: Icon(IconlyLight.search, size: 16.h),
-                  onPressed: () {
-
-                  },
+                  onPressed: () {},
                 ),
               ),
               // image
@@ -85,8 +95,36 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
               ),
+
               // Mentors
-              TopMentorsCoursesWidget(),
+              BlocBuilder<TopMentorsBloc, TopMentorsState>(
+                builder: (context, state) {
+                  if (state is TopMentorsLoading) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (state is TopMentorsLoaded) {
+                    final mentors = state.mentors.results;
+                    return mentors.isEmpty
+                        ? Center(child: Text('No mentors available'))
+                        : SizedBox(
+                      height: 120.h,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: state.mentors.count,
+                        itemBuilder: (context, index) {
+                          final mentor = mentors[index];
+                          final image = mentor.avatarUrl ?? "";
+                          return topMentorsWidget(image, mentor.fullName);
+                        },
+                      ),
+                    );
+                  } else if (state is TopMentorsError) {
+                    return Center(child: Text('Error: ${state.message}'));
+                  } else {
+                    return SizedBox.shrink();
+                  }
+                },
+              ),
+
               // Popular Courses
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24),
@@ -121,48 +159,40 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               CoursesWidget(),
-              CourseCard(
-                image: 'assets/images/course.png',
-                category: '3D Design',
-                title: '3D Design Illustration',
-                price: '\$48 ',
-                oldPrice: '\$80',
-                rating: '4.8',
-                students: '7,938',
-                onPressed: () {},
-              ),
-              CourseCard(
-                image: 'assets/images/Mask Group.png',
-                category: 'Entrepreneurship',
-                title: 'Digital Entrepreneurship',
-                price: '\$39',
-                rating: '4.9',
-                students: '6,182',
-                onPressed: () {
 
+              BlocBuilder<CoursesBloc, CourseState>(
+                builder: (context, state) {
+                  if (state is CourseLoading) {
+                    return Center(child: CircularProgressIndicator());
+                  }else if (state is CourseLoaded) {
+                    final courses = state.courses;
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: courses.results.length,
+                      itemBuilder: (context, index) {
+                        final course = courses.results[index];
+                        return CourseCard(
+                          onPressed: () {
+                            Navigator.pushNamed(context, RouteNames.topMentors);
+                          },
+                          image: course.image!,
+                          category: course.category.toString(),
+                          title: course.title,
+                          price:  (course.price ?? 0).toString(),
+                          oldPrice: "80",
+                          rating: "4.8",
+                          students: "8289",
+                        );
+                      },
+                    );
+                  }
+                  else if(state is CourseError){
+                    return Text('Error ${state.message}');
+                  }else{
+                    return SizedBox.shrink();
+                  }
                 },
-              ),
-              CourseCard(
-                image: 'assets/images/course4.png',
-                category: 'UI/UX Design',
-                title: 'Learn UX User Persona',
-                price: '\$42',
-                oldPrice: '\$75',
-                rating: '4.7',
-                students: '9,938',
-                onPressed: () {
-
-                },
-              ),
-              CourseCard(
-                image: 'assets/images/course3.png',
-                category: 'Programming',
-                title: 'Flutter Mobile Apps',
-                price: '\$44 ',
-                oldPrice: '\$72',
-                rating: '4.8',
-                students: '8,938',
-                onPressed: () {},
               ),
             ],
           ),

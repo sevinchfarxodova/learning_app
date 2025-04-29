@@ -1,59 +1,36 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:iconly/iconly.dart';
+import '../../../../core/constants/colors/app_colors.dart';
+import '../../../../core/utils/responsiveness/app_responsive.dart';
 
-
-class TopMentorsCoursesWidget extends StatefulWidget {
-  const TopMentorsCoursesWidget({super.key});
-
-  @override
-  State<TopMentorsCoursesWidget> createState() => _TopMentorsCoursesWidgetState();
-}
-
-class _TopMentorsCoursesWidgetState extends State<TopMentorsCoursesWidget> {
-  final List<Map<String, String>> instructors = [
-    {"name": "Jacob", "image": "assets/images/jacob.png"},
-    {"name": "Claire", "image": "assets/images/home_scroll_person.png"},
-    {"name": "Priscilla", "image": "assets/images/jacob.png"},
-    {"name": "Priscilla", "image": "assets/images/home_scroll_person.png"},
-    {"name": "Wade", "image": "assets/images/jacob.png"},
-    {"name": "Kathryn", "image": "assets/images/home_scroll_person.png"},
-  ];
-
-  String selectedCategory = "";
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // mentors
-        SizedBox(
-          height: 102,
-          child: ListView.separated(
-            padding: EdgeInsets.only(left: 24),
-            scrollDirection: Axis.horizontal,
-            itemCount: instructors.length,
-            separatorBuilder: (_, __) => SizedBox(width: 16),
-            itemBuilder: (context, index) {
-              final person = instructors[index];
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  CircleAvatar(
-                    radius: 36,
-                    backgroundImage: AssetImage(person["image"]!),
-                  ),
-                  Text(
-                    person["name"]!,
-                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
-                  ),
-                ],
-              );
-            },
+Widget topMentorsWidget(String imagePath, String name) => Container(
+  margin: EdgeInsets.only(right: appW(15)),
+  child: Column(
+    children: [
+      Container(
+        width: 72,
+        height: 72,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: AppColors.white,
+        ),
+        child: ClipOval(
+          child: CachedNetworkImage(
+            imageUrl: imagePath.isNotEmpty ? imagePath : "https://via.placeholder.com/72",
+            fit: BoxFit.cover,
+            errorWidget:
+                (context, url, error) => Icon(
+                  IconlyBold.user_3,
+                  color: Colors.grey.shade400,
+                  size: appH(50),
+                ),
           ),
         ),
-        SizedBox(height: 16.h),
-      ],
-    );
-  }
-}
+      ),
+
+      SizedBox(height: appH(8)),
+      Text(name, style: TextStyle(fontSize: 16, color: Colors.grey.shade900)),
+    ],
+  ),
+);
