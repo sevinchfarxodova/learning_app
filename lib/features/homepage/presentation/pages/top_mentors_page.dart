@@ -1,9 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iconly/iconly.dart';
-
+import '../bloc/home_event.dart';
+import '../bloc/mentors/mentors_bloc.dart';
+import '../bloc/mentors/mentors_state.dart';
 import '../widgets/mentors_list_widget.dart';
+import '../widgets/notification_widget.dart';
 
 class TopMentorsPage extends StatefulWidget {
   const TopMentorsPage({super.key});
@@ -13,6 +17,12 @@ class TopMentorsPage extends StatefulWidget {
 }
 
 class _TopMentorsPageState extends State<TopMentorsPage> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<MentorBloc>().add(MentorsEvent(limit: 10));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,55 +43,29 @@ class _TopMentorsPageState extends State<TopMentorsPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            NotificationWidget(
-              title: 'Jacob Kulikowski',
-              subtitle: 'Marketing Analyst',
-              imagePath: 'assets/images/jacob.png',
-            ),
-            NotificationWidget(
-              title: 'Claire Ordonez',
-              subtitle: 'VP of Sales',
-              imagePath: 'assets/images/home_scroll_person.png',
-            ),
-            NotificationWidget(
-              title: 'Priscilla Ehrman',
-              subtitle: 'UX Designer',
-              imagePath: 'assets/images/jacob.png',
-            ),
-            NotificationWidget(
-              title: 'Jacob Kulikowski',
-              subtitle: 'Marketing Analyst',
-              imagePath: 'assets/images/jacob.png',
-            ),
-            NotificationWidget(
-              title: 'Priscilla Ehrman',
-              subtitle: 'UX Designer',
-              imagePath: 'assets/images/jacob.png',
-            ),
-            NotificationWidget(
-              title: 'Jacob Kulikowski',
-              subtitle: 'Marketing Analyst',
-              imagePath: 'assets/images/jacob.png',
-            ),
-            NotificationWidget(
-              title: 'Priscilla Ehrman',
-              subtitle: 'UX Designer',
-              imagePath: 'assets/images/jacob.png',
-            ),
-            NotificationWidget(
-              title: 'Jacob Kulikowski',
-              subtitle: 'Marketing Analyst',
-              imagePath: 'assets/images/jacob.png',
-            ),
-            NotificationWidget(
-              title: 'Priscilla Ehrman',
-              subtitle: 'UX Designer',
-              imagePath: 'assets/images/jacob.png',
-            ),
-            NotificationWidget(
-              title: 'Jacob Kulikowski',
-              subtitle: 'Marketing Analyst',
-              imagePath: 'assets/images/jacob.png',
+            BlocBuilder<MentorBloc, MentorState>(
+              builder: (context, state) {
+                if (state is MentorLoading) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (state is MentorLoaded) {
+                  final mentors = state.mentors.results;
+                  return ListView.builder(
+                    itemCount: mentors.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final mentor = mentors[index];
+                      return NotificationWidget(
+                        title: mentor.fullName,
+                        subtitle: mentor.expertiseDisplay,
+                        imagePath: mentor.avatarUrl ?? 'null',
+                      );
+                    },
+                  );
+                } else if (state is MentorError) {
+                  return Center(child: Text(state.message));
+                }else {
+                  return const SizedBox.shrink();
+                }
+              },
             ),
           ],
         ),

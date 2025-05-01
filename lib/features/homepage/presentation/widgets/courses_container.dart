@@ -66,7 +66,7 @@ class _CourseCardState extends State<CourseCard> {
             // Image
             ClipRRect(
               borderRadius: BorderRadius.circular(16),
-              child: Image.asset(
+              child: Image.network(
                 widget.image,
                 width: 110.w,
                 height: 100.h,

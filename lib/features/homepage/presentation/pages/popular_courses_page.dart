@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iconly/iconly.dart';
+import 'package:learingn_app/core/utils/responsiveness/app_responsive.dart';
 
 import '../widgets/courses_container.dart';
 import '../widgets/courses_scroll.dart';
@@ -37,7 +38,7 @@ class _PopularCoursesPageState extends State<PopularCoursesPage> {
           child: Column(
             children: [
               CoursesWidget(),
-              SizedBox(height: 14.h),
+              SizedBox(height: appH(14)),
               CourseCard(
                 image: 'assets/images/course.png',
                 category: '3D Design',

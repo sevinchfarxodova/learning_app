@@ -28,7 +28,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     context.read<TopMentorsBloc>().add(TopMentorsEvent(limit: 10));
-    context.read<CoursesBloc>().add(GetPopularCoursesEvent(limit: 2));
+    context.read<CoursesBloc>().add(GetPopularCoursesEvent(limit: 4));
   }
 
   @override

@@ -1,49 +1,66 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iconly/iconly.dart';
-
+import 'package:cached_network_image/cached_network_image.dart';
 import '../../../../core/constants/colors/app_colors.dart';
+import '../../../../core/utils/responsiveness/app_responsive.dart';
 
-
-class NotificationWidget extends StatelessWidget {
+class ChatsWidget extends StatelessWidget {
   final String imagePath;
-  final String title;
-  final String subtitle;
+  final String name;
+  final String jobTitle;
 
-  NotificationWidget({
+  const ChatsWidget({
     super.key,
-    required this.title,
-    required this.subtitle,
     required this.imagePath,
+    required this.name,
+    required this.jobTitle,
   });
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {},
-      child: Container(
-         padding: EdgeInsets.all( 10),
-
+    return Container(
+      margin: const EdgeInsets.only(top: 24),
+      child: SizedBox(
+        height: 60,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            CircleAvatar(
-              radius: 32.r,
-              backgroundImage: AssetImage(imagePath),
+            Container(
+              width: appW(72),
+              height: appH(72),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: AppColors.white,
+              ),
+              child: ClipOval(
+                child: CachedNetworkImage(
+                  imageUrl: imagePath,
+                  fit: BoxFit.cover,
+                  errorWidget:
+                      (context, url, error) => Icon(
+                    IconlyBold.user_3,
+                        color: Colors.grey.shade400,
+                    size: appH(50),
+                  ),
+                  placeholder:
+                      (context, url) =>
+                      Center(child: CircularProgressIndicator()),
+                ),
+              ),
             ),
+            SizedBox(width: appW(20)),
             Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  title,
+                  name,
                   style: TextStyle(
                     fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.black,
+                    color: Colors.grey.shade900,
                   ),
                 ),
                 Text(
-                  subtitle,
+                  jobTitle,
                   style: TextStyle(
                     fontSize: 14,
                     color: Colors.grey.shade700,
@@ -51,7 +68,15 @@ class NotificationWidget extends StatelessWidget {
                 ),
               ],
             ),
-            Icon(IconlyLight.chat, color: AppColors.blue,size: 26,),
+            const Spacer(),
+            IconButton(
+              onPressed: () {},
+              icon: Icon(
+                IconlyLight.chat,
+                color: AppColors.blue500,
+                size: 28,
+              ),
+            ),
           ],
         ),
       ),
