@@ -5,7 +5,9 @@ import 'package:learingn_app/core/utils/responsiveness/app_responsive.dart';
 import 'package:learingn_app/features/auth/presentation/bloc/confirm_email/confirm_email_bloc.dart';
 import 'package:learingn_app/features/auth/presentation/bloc/reset_new_password/new_passw_bloc.dart';
 import 'package:learingn_app/features/auth/presentation/bloc/reset_password/reset_pass_bloc.dart';
+import 'package:learingn_app/features/homepage/presentation/bloc/category/category_bloc.dart';
 import 'package:learingn_app/features/homepage/presentation/bloc/courses/course_bloc.dart';
+import 'package:learingn_app/features/homepage/presentation/bloc/search/search_bloc.dart';
 import 'package:learingn_app/features/homepage/presentation/bloc/top_mentors/top_mentors_bloc.dart';
 
 import 'core/di/service_locator.dart';
@@ -38,6 +40,8 @@ class MyApp extends StatelessWidget {
         BlocProvider<TopMentorsBloc>(create: (context) => sl<TopMentorsBloc>()),
         BlocProvider<MentorBloc>(create: (context) => sl<MentorBloc>()),
         BlocProvider<CoursesBloc>(create: (context) => sl<CoursesBloc>()),
+        BlocProvider<CategoryBloc>(create: (context) => sl<CategoryBloc>()),
+        BlocProvider<SearchBloc>(create: (context) => sl<SearchBloc>()),
       ],
       child: ScreenUtilInit(
         designSize: const Size(430, 812),
@@ -46,7 +50,7 @@ class MyApp extends StatelessWidget {
         builder: (context, child) {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
-            initialRoute: RouteNames.homePage,
+            initialRoute: RouteNames.bottomNavBar,
             onGenerateRoute: AppRoute(context: context).onGenerateRoute,
           );
         },

@@ -36,4 +36,16 @@ static final blue100 = const Color(0xFFEBEFFE);
  static const Color progressMediumHigh = Color(0xFFFFAB38); // 60-74%
  static const Color progressHigh = Color(0xFFFF4D67); // 75-99%
  static const Color progressComplete = Color(0xFF246BFD); // 100%
+
+// grey
+ static final Color grey900 = const Color(0xFF212121);
+ static final Color grey800 = const Color(0xFF424242);
+ static final Color grey700 = const Color(0xFF616161);
+ static final Color grey600 = const Color(0xFF757575);
+ static final Color grey500 = const Color(0xFF9E9E9E);
+ static final Color grey400 = const Color(0xFFBDBDBD);
+ static final Color grey300 = const Color(0xFFE0E0E0);
+ static final Color grey200 = const Color(0xFFEEEEEE);
+ static final Color grey100 = const Color(0xFFF5F5F5);
+ static final Color grey50 = const Color(0xFFFAFAFA);
 }

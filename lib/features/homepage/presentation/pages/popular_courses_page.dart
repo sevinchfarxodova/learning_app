@@ -1,9 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iconly/iconly.dart';
 import 'package:learingn_app/core/utils/responsiveness/app_responsive.dart';
 
+import '../../../../core/routes/route_names.dart';
+import '../../../profile_settings_page/presentation/pages/help_center/widgets/choice_chip.dart';
+import '../bloc/category/category_bloc.dart';
+import '../bloc/category/category_state.dart';
+import '../bloc/courses/course_bloc.dart';
+import '../bloc/courses/course_state.dart';
+import '../bloc/home_event.dart';
 import '../widgets/courses_container.dart';
 import '../widgets/courses_scroll.dart';
 
@@ -15,6 +23,14 @@ class PopularCoursesPage extends StatefulWidget {
 }
 
 class _PopularCoursesPageState extends State<PopularCoursesPage> {
+  int selectedIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<CoursesBloc>().add(GetPopularCoursesEvent(limit: 2));
+    context.read<CategoryBloc>().add(GetCategoriesEvent(limit: 10));
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,46 +53,71 @@ class _PopularCoursesPageState extends State<PopularCoursesPage> {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
-              CoursesWidget(),
+              BlocBuilder<CategoryBloc, CategoryState>(
+                builder: (context, state) {
+                  if (state is CategoryLoading) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (state is CategoryLoaded) {
+                    final category = state.categories;
+                    return SizedBox(
+                      height: appH(40),
+                      child: ListView.builder(
+                          itemCount: category.count,
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (context, index) {
+                            return CustomChoiceChipWg(
+                              index: index,
+                              label: category.results[index].name,
+                              selectedIndex: selectedIndex,
+                              onSelected: (selected) {
+                                setState(() {
+                                  selectedIndex =
+                                  selected ? index : selectedIndex;
+                                });
+                              },
+                            );
+                          }
+                      ),
+                    );
+                  }else if(state is CategoryError){
+                    return Center(child: Text('Ошибка: ${state.message}'));
+                  }
+                  return const SizedBox.shrink();
+                },
+              ),
               SizedBox(height: appH(14)),
-              CourseCard(
-                image: 'assets/images/course.png',
-                category: '3D Design',
-                title: '3D Design Illustration',
-                price: '\$48 ',
-                oldPrice: '\$80',
-                rating: '4.8',
-                students: '7,938',
-                onPressed: () {},
-              ),
-              CourseCard(
-                image: 'assets/images/Mask Group.png',
-                category: 'Entrepreneurship',
-                title: 'Digital Entrepreneurship',
-                price: '\$39',
-                rating: '4.9',
-                students: '6,182',
-                onPressed: () {},
-              ),
-              CourseCard(
-                image: 'assets/images/course4.png',
-                category: 'UI/UX Design',
-                title: 'Learn UX User Persona',
-                price: '\$42',
-                oldPrice: '\$75',
-                rating: '4.7',
-                students: '9,938',
-                onPressed: () {},
-              ),
-              CourseCard(
-                image: 'assets/images/course3.png',
-                category: 'Programming',
-                title: 'Flutter Mobile Apps',
-                price: '\$44 ',
-                oldPrice: '\$72',
-                rating: '4.8',
-                students: '8,938',
-                onPressed: () {},
+              BlocBuilder<CoursesBloc, CourseState>(
+                builder: (context, state) {
+                  if (state is CourseLoading) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (state is CourseLoaded) {
+                    final courses = state.courses;
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: courses.results.length,
+                      itemBuilder: (context, index) {
+                        final course = courses.results[index];
+                        return CourseCard(
+                          onPressed: () {
+                            Navigator.pushNamed(context, RouteNames.topMentors);
+                          },
+                          image: course.image!,
+                          category: course.category.toString(),
+                          title: course.title,
+                          price: (course.price ?? 0).toString(),
+                          oldPrice: "80",
+                          rating: "4.8",
+                          students: "8289",
+                        );
+                      },
+                    );
+                  } else if (state is CourseError) {
+                    return Text('Error ${state.message}');
+                  } else {
+                    return SizedBox.shrink();
+                  }
+                },
               ),
             ],
           ),

@@ -13,13 +13,16 @@ import 'package:learingn_app/features/homepage/data/datasource/home_remote_datas
 import 'package:learingn_app/features/homepage/data/datasource/home_remote_datasource_impl.dart';
 import 'package:learingn_app/features/homepage/data/repository/home_repo.dart';
 import 'package:learingn_app/features/homepage/domain/repository/home_repository.dart';
+import 'package:learingn_app/features/homepage/domain/usecases/category_usecase.dart';
 import 'package:learingn_app/features/homepage/domain/usecases/courses_usecase.dart';
 import 'package:learingn_app/features/homepage/domain/usecases/mentors_usecase.dart';
+import 'package:learingn_app/features/homepage/domain/usecases/search_usecase.dart';
 import 'package:learingn_app/features/homepage/domain/usecases/top_mentors_usecase.dart';
+import 'package:learingn_app/features/homepage/presentation/bloc/category/category_bloc.dart';
 import 'package:learingn_app/features/homepage/presentation/bloc/courses/course_bloc.dart';
 import 'package:learingn_app/features/homepage/presentation/bloc/mentors/mentors_bloc.dart';
+import 'package:learingn_app/features/homepage/presentation/bloc/search/search_bloc.dart';
 import 'package:learingn_app/features/homepage/presentation/bloc/top_mentors/top_mentors_bloc.dart';
-
 import '../../features/auth/data/data_sources/remote/aut_remote_data_source.dart';
 import '../../features/auth/data/data_sources/remote/aut_remote_data_source_impl.dart';
 import '../../features/auth/data/repositories/auth_repo_impl.dart';
@@ -33,7 +36,7 @@ Future<void> setupServiceLocator() async {
   // Core
   sl.registerSingleton<DioClient>(DioClient());
 
-                   // DATA SOURCES
+  // DATA SOURCES
   // auth
   sl.registerLazySingleton<AuthRemoteDataSource>(
     () => AuthRemoteDataSourceImpl(dioClient: sl<DioClient>()),
@@ -47,7 +50,7 @@ Future<void> setupServiceLocator() async {
     () => HomeRemoteDataSourceImpl(dioClient: sl<DioClient>()),
   );
 
-                          // REPOSITORIES
+  // REPOSITORIES
   //auth
   sl.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(
@@ -60,7 +63,7 @@ Future<void> setupServiceLocator() async {
     () => HomeRepositoryImpl(homeRemoteDataSource: sl<HomeRemoteDataSource>()),
   );
 
-                        // USE CASES
+  // USE CASES
   // auth
   sl.registerLazySingleton<RegisterWithEmailUseCase>(
     () => RegisterWithEmailUseCase(sl<AuthRepository>()),
@@ -82,20 +85,31 @@ Future<void> setupServiceLocator() async {
     () => NewPasswordResetUseCase(authRepository: sl<AuthRepository>()),
   );
 
+
   // home
   sl.registerLazySingleton<TopMentorsUseCase>(
-        () => TopMentorsUseCase( sl<HomeRepository>()),
+    () => TopMentorsUseCase(sl<HomeRepository>()),
   );
 
   sl.registerLazySingleton<MentorsUseCase>(
-        () => MentorsUseCase( sl<HomeRepository>()),
+    () => MentorsUseCase(sl<HomeRepository>()),
   );
 
   sl.registerLazySingleton<CoursesUseCase>(
-        () => CoursesUseCase( sl<HomeRepository>()),
+    () => CoursesUseCase(sl<HomeRepository>()),
   );
 
-                            //BLOCS
+
+  sl.registerLazySingleton <CategoryUseCase>(
+        () => CategoryUseCase(sl<HomeRepository>()),
+  );
+
+
+  sl.registerLazySingleton <SearchUseCase>(
+        () => SearchUseCase(sl<HomeRepository>()),
+  );
+
+  //BLOCS
   //     auth
 
   sl.registerFactory<AuthBloc>(
@@ -119,15 +133,21 @@ Future<void> setupServiceLocator() async {
 
   //  home
   sl.registerLazySingleton<TopMentorsBloc>(
-        () => TopMentorsBloc( sl<HomeRepository>()),
+    () => TopMentorsBloc(sl<HomeRepository>()),
   );
 
-  sl.registerLazySingleton<MentorBloc>(
-        () => MentorBloc( sl<HomeRepository>()),
-  );
+  sl.registerLazySingleton<MentorBloc>(() => MentorBloc(sl<HomeRepository>()));
 
   sl.registerLazySingleton<CoursesBloc>(
-        () => CoursesBloc( sl<HomeRepository>()),
+    () => CoursesBloc(sl<HomeRepository>()),
+  );
+
+  sl.registerLazySingleton<CategoryBloc>(
+        () => CategoryBloc(sl<HomeRepository>()),
+  );
+
+  sl.registerLazySingleton<SearchBloc>(
+        () => SearchBloc(sl<HomeRepository>()),
   );
 
 }

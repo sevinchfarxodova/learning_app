@@ -11,6 +11,7 @@ import 'package:learingn_app/features/homepage/presentation/pages/bookmark.dart'
 import 'package:learingn_app/features/homepage/presentation/pages/home_page.dart';
 import 'package:learingn_app/features/homepage/presentation/pages/notification_page.dart';
 import 'package:learingn_app/features/homepage/presentation/pages/popular_courses_page.dart';
+import 'package:learingn_app/features/homepage/presentation/pages/search/search_page.dart';
 import 'package:learingn_app/features/homepage/presentation/pages/top_mentors_page.dart';
 import 'package:learingn_app/features/profile_settings_page/presentation/pages/edit_profile_page.dart';
 import 'package:learingn_app/features/profile_settings_page/presentation/pages/help_center/help_center_page.dart';
@@ -82,6 +83,10 @@ class AppRoute {
       //home
       case RouteNames.homePage:
         return MaterialPageRoute(builder: (_) => HomePage());
+
+      case RouteNames.searchPage:
+        return MaterialPageRoute(builder: (_) => SearchPage());
+
 
       case RouteNames.bottomNavBar:
         return MaterialPageRoute(builder: (_) => BottomNavBar());

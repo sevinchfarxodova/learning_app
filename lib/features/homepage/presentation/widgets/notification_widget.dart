@@ -38,8 +38,17 @@ class NotificationWidget extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Image.asset(imagePath),
-            SizedBox(width:20.w),
+            imagePath.isNotEmpty
+                ? Image.network(
+              imagePath,
+              width: 80,
+              height: 80,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) {
+                return Icon(Icons.person, size: 80);
+              },
+            )
+                : Icon(Icons.person, size: 80),            SizedBox(width:20.w),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,

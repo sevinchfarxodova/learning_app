@@ -6,7 +6,6 @@ import 'package:iconly/iconly.dart';
 import '../bloc/home_event.dart';
 import '../bloc/mentors/mentors_bloc.dart';
 import '../bloc/mentors/mentors_state.dart';
-import '../widgets/mentors_list_widget.dart';
 import '../widgets/notification_widget.dart';
 
 class TopMentorsPage extends StatefulWidget {
@@ -20,7 +19,7 @@ class _TopMentorsPageState extends State<TopMentorsPage> {
   @override
   void initState() {
     super.initState();
-    context.read<MentorBloc>().add(MentorsEvent(limit: 10));
+    context.read<MentorBloc>().add(MentorsEvent(limit: 5));
   }
 
   @override
@@ -50,19 +49,22 @@ class _TopMentorsPageState extends State<TopMentorsPage> {
                 } else if (state is MentorLoaded) {
                   final mentors = state.mentors.results;
                   return ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
                     itemCount: mentors.length,
                     itemBuilder: (BuildContext context, int index) {
                       final mentor = mentors[index];
                       return NotificationWidget(
                         title: mentor.fullName,
                         subtitle: mentor.expertiseDisplay,
-                        imagePath: mentor.avatarUrl ?? 'null',
+                        imagePath:
+                          mentor.avatarUrl ?? 'null',
                       );
                     },
                   );
                 } else if (state is MentorError) {
                   return Center(child: Text(state.message));
-                }else {
+                } else {
                   return const SizedBox.shrink();
                 }
               },

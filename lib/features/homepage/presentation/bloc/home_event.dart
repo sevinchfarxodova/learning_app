@@ -19,5 +19,19 @@ class TopMentorsEvent extends HomeEvent {
 class MentorsEvent extends HomeEvent {
   final int limit;
 
- MentorsEvent({required this.limit});
+  MentorsEvent({required this.limit});
+}
+
+//  Category
+class GetCategoriesEvent extends HomeEvent {
+  final int limit;
+
+  GetCategoriesEvent({required this.limit});
+}
+
+// SEARCH
+class SearchEvent extends HomeEvent {
+  final String query;
+
+  SearchEvent({required this.query});
 }

@@ -10,7 +10,7 @@ class MentorBloc extends Bloc<MentorsEvent, MentorState>{
     on<MentorsEvent>(mentors);
   }
 
-  Future<void> mentors(emit, event) async{
+  Future<void> mentors(MentorsEvent event,Emitter<MentorState> emit) async{
     emit(MentorLoading());
     try{
       final mentors = await homeRepository.mentors(limit: event.limit);

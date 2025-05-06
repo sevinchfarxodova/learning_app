@@ -19,4 +19,15 @@ abstract class ApiUrls {
   static final String courses = '/courses/';
   static final String popularCourses = '/courses/popular/?limit=';
 
+  //! Category
+  static const String categories = '/categories/?limit=';
+
+
+
+  //! Search
+  static const String search = '/search/?q=';
+
+  //! Wishlist
+  static const String wishlist = '/wishlist/?limit=';
+
 }

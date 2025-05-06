@@ -3,16 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iconly/iconly.dart';
-import 'package:learingn_app/features/auth/presentation/widgets/text_field.dart';
 import 'package:learingn_app/features/homepage/presentation/bloc/courses/course_bloc.dart';
 import 'package:learingn_app/features/homepage/presentation/bloc/courses/course_state.dart';
 import 'package:learingn_app/features/homepage/presentation/bloc/home_event.dart';
 import 'package:learingn_app/features/homepage/presentation/bloc/top_mentors/top_mentors_bloc.dart';
 import 'package:learingn_app/features/homepage/presentation/bloc/top_mentors/top_mentors_state.dart';
 import 'package:learingn_app/features/homepage/presentation/widgets/courses_container.dart';
+import 'package:learingn_app/features/profile_settings_page/presentation/pages/help_center/widgets/choice_chip.dart';
 import '../../../../core/constants/colors/app_colors.dart';
 import '../../../../core/routes/route_names.dart';
-import '../widgets/courses_scroll.dart';
+import '../../../../core/utils/responsiveness/app_responsive.dart';
+import '../bloc/category/category_bloc.dart';
+import '../bloc/category/category_state.dart';
 import '../widgets/home_appBar.dart';
 import '../widgets/top_mentors_widget.dart';
 
@@ -24,11 +26,14 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  int selectedIndex = 0;
+
   @override
   void initState() {
     super.initState();
     context.read<TopMentorsBloc>().add(TopMentorsEvent(limit: 10));
-    context.read<CoursesBloc>().add(GetPopularCoursesEvent(limit: 4));
+    context.read<CoursesBloc>().add(GetPopularCoursesEvent(limit: 5));
+    context.read<CategoryBloc>().add(GetCategoriesEvent(limit: 10));
   }
 
   @override
@@ -38,24 +43,57 @@ class _HomePageState extends State<HomePage> {
       appBar: myappBar(context),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 24),
+          padding: EdgeInsets.symmetric(vertical: 24, ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               // Search
-              TextFiledWidget1(
-                text: "Search",
-                suffixIcon: IconButton(
-                  onPressed: () {},
-                  icon: Icon(
-                    IconlyLight.filter,
-                    color: AppColors.blue,
-                    size: 16.h,
-                  ),
+              Container(
+                height: appH(52),
+                width: appW(400),
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade100,
+                  borderRadius: BorderRadius.circular(10),
                 ),
-                prefixIcon: IconButton(
-                  icon: Icon(IconlyLight.search, size: 16.h),
-                  onPressed: () {},
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.transparent,
+                    shadowColor: Colors.transparent,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: appW(32),
+                      vertical: appH(12),
+                    ),
+                  ),
+                  onPressed: () {
+                   Navigator.pushNamed(context, RouteNames.searchPage);
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Icon(
+                        IconlyLight.search,
+                        size: appH(20),
+                        color: Colors.grey.shade400,
+                      ),
+                      SizedBox(width: appW(20)),
+                      Text(
+                        'Search',
+                        style: TextStyle(
+                          color: Colors.grey.shade400,
+                          fontSize: 14,
+                        ),
+                      ),
+                      const Spacer(),
+                      Icon(
+                        IconlyLight.filter,
+                        size: appH(20),
+                        color: AppColors.blue400,
+                      ),
+                    ],
+                  ),
                 ),
               ),
               // image
@@ -105,17 +143,17 @@ class _HomePageState extends State<HomePage> {
                     return mentors.isEmpty
                         ? Center(child: Text('No mentors available'))
                         : SizedBox(
-                      height: 120.h,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: state.mentors.count,
-                        itemBuilder: (context, index) {
-                          final mentor = mentors[index];
-                          final image = mentor.avatarUrl ?? "";
-                          return topMentorsWidget(image, mentor.fullName);
-                        },
-                      ),
-                    );
+                          height: 120.h,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: state.mentors.count,
+                            itemBuilder: (context, index) {
+                              final mentor = mentors[index];
+                              final image = mentor.avatarUrl ?? "";
+                              return topMentorsWidget(image, mentor.fullName);
+                            },
+                          ),
+                        );
                   } else if (state is TopMentorsError) {
                     return Center(child: Text('Error: ${state.message}'));
                   } else {
@@ -157,13 +195,45 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
               ),
-              CoursesWidget(),
+              SizedBox(height: appH(10)),
+              BlocBuilder<CategoryBloc, CategoryState>(
+                builder: (context, state) {
+                  if (state is CategoryLoading) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (state is CategoryLoaded) {
+                    final category = state.categories;
+                    return SizedBox(
+                      height: appH(40),
+                      child: ListView.builder(
+                        itemCount: category.count,
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) {
+                          return CustomChoiceChipWg(
+                            index: index,
+                            label: category.results[index].name,
+                            selectedIndex: selectedIndex,
+                            onSelected: (selected) {
+                              setState(() {
+                                selectedIndex =
+                                    selected ? index : selectedIndex;
+                              });
+                            },
+                          );
+                        }
+                      ),
+                    );
+                  }else if(state is CategoryError){
+                    return Center(child: Text('Ошибка: ${state.message}'));
+                  }
+                  return const SizedBox.shrink();
+                },
+              ),
 
               BlocBuilder<CoursesBloc, CourseState>(
                 builder: (context, state) {
                   if (state is CourseLoading) {
                     return Center(child: CircularProgressIndicator());
-                  }else if (state is CourseLoaded) {
+                  } else if (state is CourseLoaded) {
                     final courses = state.courses;
                     return ListView.builder(
                       shrinkWrap: true,
@@ -178,17 +248,16 @@ class _HomePageState extends State<HomePage> {
                           image: course.image!,
                           category: course.category.toString(),
                           title: course.title,
-                          price:  (course.price ?? 0).toString(),
+                          price: (course.price ?? 0).toString(),
                           oldPrice: "80",
                           rating: "4.8",
                           students: "8289",
                         );
                       },
                     );
-                  }
-                  else if(state is CourseError){
+                  } else if (state is CourseError) {
                     return Text('Error ${state.message}');
-                  }else{
+                  } else {
                     return SizedBox.shrink();
                   }
                 },
