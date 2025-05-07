@@ -13,7 +13,6 @@ import '../bloc/courses/course_bloc.dart';
 import '../bloc/courses/course_state.dart';
 import '../bloc/home_event.dart';
 import '../widgets/courses_container.dart';
-import '../widgets/courses_scroll.dart';
 
 class PopularCoursesPage extends StatefulWidget {
   const PopularCoursesPage({super.key});
@@ -105,7 +104,7 @@ class _PopularCoursesPageState extends State<PopularCoursesPage> {
                           image: course.image!,
                           category: course.category.toString(),
                           title: course.title,
-                          price: (course.price ?? 0).toString(),
+                          price: (course.price ).toString(),
                           oldPrice: "80",
                           rating: "4.8",
                           students: "8289",

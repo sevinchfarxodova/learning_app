@@ -3,6 +3,7 @@ import 'package:learingn_app/features/homepage/data/model/response_mentor_model.
 
 import '../../domain/entity/search_reponse.dart';
 import '../model/category_response_model.dart';
+import '../model/course_model.dart';
 
 abstract class HomeRemoteDataSource {
   //   MENTORS
@@ -12,6 +13,9 @@ abstract class HomeRemoteDataSource {
 
   // COURSES
   Future<CoursesResponseModel> popularCourses({required int limit});
+
+  Future<CourseModel> getSingleCourses({required int id});
+
 
   // Category
   Future<CategoryResponseModel> getCategories({required int limit});

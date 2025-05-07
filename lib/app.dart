@@ -7,6 +7,7 @@ import 'package:learingn_app/features/auth/presentation/bloc/reset_new_password/
 import 'package:learingn_app/features/auth/presentation/bloc/reset_password/reset_pass_bloc.dart';
 import 'package:learingn_app/features/homepage/presentation/bloc/category/category_bloc.dart';
 import 'package:learingn_app/features/homepage/presentation/bloc/courses/course_bloc.dart';
+import 'package:learingn_app/features/homepage/presentation/bloc/one_course/one_course_bloc.dart';
 import 'package:learingn_app/features/homepage/presentation/bloc/search/search_bloc.dart';
 import 'package:learingn_app/features/homepage/presentation/bloc/top_mentors/top_mentors_bloc.dart';
 
@@ -42,6 +43,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<CoursesBloc>(create: (context) => sl<CoursesBloc>()),
         BlocProvider<CategoryBloc>(create: (context) => sl<CategoryBloc>()),
         BlocProvider<SearchBloc>(create: (context) => sl<SearchBloc>()),
+        BlocProvider<SingleCourseBloc>(create: (context) => sl<SingleCourseBloc>()),
       ],
       child: ScreenUtilInit(
         designSize: const Size(430, 812),

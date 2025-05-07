@@ -9,6 +9,12 @@ class GetPopularCoursesEvent extends HomeEvent {
   GetPopularCoursesEvent({required this.limit});
 }
 
+class GetSingleCourseEvent extends HomeEvent {
+  final int id;
+
+  GetSingleCourseEvent({required this.id});
+}
+
 // MENTORS
 class TopMentorsEvent extends HomeEvent {
   final int limit;

@@ -22,7 +22,8 @@ class CourseCard extends StatefulWidget {
     required this.price,
     this.oldPrice,
     required this.rating,
-    required this.students, required this.onPressed,
+    required this.students,
+    required this.onPressed,
 
   });
 
@@ -37,29 +38,17 @@ class _CourseCardState extends State<CourseCard> {
   Widget build(BuildContext context) {
     return GestureDetector(
 
-      onTap: () {
-        setState(() {
-          isSelected = !isSelected;
-        });
-      },
+      onTap: (){widget.onPressed();},
       child: Container(
         margin: const EdgeInsets.only(bottom: 16),
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: Colors.white,
           border: Border.all(
-            color: isSelected ? Colors.grey.shade400 : Colors.transparent,
+            color:  Colors.transparent,
             width: 1.5,
           ),
           borderRadius: BorderRadius.circular(24),
-          boxShadow: [
-            if (!isSelected)
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.1),
-                blurRadius: 8,
-                offset: Offset(0, 4),
-              ),
-          ],
         ),
         child: Row(
           children: [

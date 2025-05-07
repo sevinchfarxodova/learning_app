@@ -16,6 +16,7 @@ import 'package:learingn_app/features/homepage/domain/repository/home_repository
 import 'package:learingn_app/features/homepage/domain/usecases/category_usecase.dart';
 import 'package:learingn_app/features/homepage/domain/usecases/courses_usecase.dart';
 import 'package:learingn_app/features/homepage/domain/usecases/mentors_usecase.dart';
+import 'package:learingn_app/features/homepage/domain/usecases/one_course_use_case.dart';
 import 'package:learingn_app/features/homepage/domain/usecases/search_usecase.dart';
 import 'package:learingn_app/features/homepage/domain/usecases/top_mentors_usecase.dart';
 import 'package:learingn_app/features/homepage/presentation/bloc/category/category_bloc.dart';
@@ -28,6 +29,7 @@ import '../../features/auth/data/data_sources/remote/aut_remote_data_source_impl
 import '../../features/auth/data/repositories/auth_repo_impl.dart';
 import '../../features/auth/domain/repository/auth_repo.dart';
 import '../../features/auth/domain/usecase/register_email_usecase.dart';
+import '../../features/homepage/presentation/bloc/one_course/one_course_bloc.dart';
 import '../network/dio_client.dart';
 
 final sl = GetIt.instance;
@@ -109,6 +111,10 @@ Future<void> setupServiceLocator() async {
         () => SearchUseCase(sl<HomeRepository>()),
   );
 
+  sl.registerLazySingleton <SingleCourseUseCase>(
+        () => SingleCourseUseCase(sl<HomeRepository>()),
+  );
+
   //BLOCS
   //     auth
 
@@ -140,6 +146,10 @@ Future<void> setupServiceLocator() async {
 
   sl.registerLazySingleton<CoursesBloc>(
     () => CoursesBloc(sl<HomeRepository>()),
+  );
+
+  sl.registerLazySingleton<SingleCourseBloc>(
+        () => SingleCourseBloc(sl<HomeRepository>()),
   );
 
   sl.registerLazySingleton<CategoryBloc>(

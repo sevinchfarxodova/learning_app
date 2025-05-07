@@ -1,6 +1,5 @@
 import 'package:learingn_app/core/database/local/hive_auth.dart';
 import 'package:learingn_app/features/auth/data/model/register_model.dart';
-import 'package:learingn_app/features/auth/data/model/token_model.dart';
 import 'package:learingn_app/features/auth/domain/entity/reset_passw_entity.dart';
 
 import '../../domain/entity/token_entity.dart';

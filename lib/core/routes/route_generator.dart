@@ -10,6 +10,7 @@ import 'package:learingn_app/features/auth/presentation/pages/sign_up_blank_form
 import 'package:learingn_app/features/homepage/presentation/pages/bookmark.dart';
 import 'package:learingn_app/features/homepage/presentation/pages/home_page.dart';
 import 'package:learingn_app/features/homepage/presentation/pages/notification_page.dart';
+import 'package:learingn_app/features/homepage/presentation/pages/one_course/one_course_details.dart';
 import 'package:learingn_app/features/homepage/presentation/pages/popular_courses_page.dart';
 import 'package:learingn_app/features/homepage/presentation/pages/search/search_page.dart';
 import 'package:learingn_app/features/homepage/presentation/pages/top_mentors_page.dart';
@@ -80,7 +81,13 @@ class AppRoute {
         final token = routeSettings.arguments;
         return MaterialPageRoute(builder: (_) => NewPassword(token: token.toString(),));
 
-      //home
+      case RouteNames.courseDetail:
+        final id = routeSettings.arguments as int;
+        return MaterialPageRoute(
+          builder: (_) => CourseDetailsPage(id: id),
+        );
+
+    //home
       case RouteNames.homePage:
         return MaterialPageRoute(builder: (_) => HomePage());
 
@@ -103,7 +110,8 @@ class AppRoute {
       case RouteNames.popularCoursesPage:
         return MaterialPageRoute(builder: (_) => PopularCoursesPage());
 
-      // profile settings
+
+    // profile settings
 
       case RouteNames.profile:
         return MaterialPageRoute(builder: (_) => ProfileSettings());

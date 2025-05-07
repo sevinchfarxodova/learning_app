@@ -243,12 +243,13 @@ class _HomePageState extends State<HomePage> {
                         final course = courses.results[index];
                         return CourseCard(
                           onPressed: () {
-                            Navigator.pushNamed(context, RouteNames.topMentors);
+                            Navigator.pushNamed(context, RouteNames.courseDetail,
+                            arguments:  course.id);
                           },
                           image: course.image!,
                           category: course.category.toString(),
                           title: course.title,
-                          price: (course.price ?? 0).toString(),
+                          price: (course.price).toString(),
                           oldPrice: "80",
                           rating: "4.8",
                           students: "8289",

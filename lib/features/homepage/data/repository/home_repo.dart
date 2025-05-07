@@ -33,9 +33,8 @@ class HomeRepositoryImpl implements HomeRepository{
   }
 
   @override
-  Future<Course> getSingleCourses({required int id}) {
-    // TODO: implement getSingleCourses
-    throw UnimplementedError();
+  Future<Course> getSingleCourses({required int id}) async {
+   return await homeRemoteDataSource.getSingleCourses(id: id);
   }
 
   @override

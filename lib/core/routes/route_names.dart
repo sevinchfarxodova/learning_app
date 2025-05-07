@@ -19,6 +19,7 @@ abstract class RouteNames {
   static const String topMentors = '/topMentors';
   static const String popularCoursesPage = '/popularCoursesPage';
   static const String searchPage = '/searchPage';
+  static const String courseDetail = '/courseDetail';
 
 
 
